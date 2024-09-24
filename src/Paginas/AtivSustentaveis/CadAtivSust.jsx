@@ -10,7 +10,7 @@ function CadAtivSust() {
     const [listaAtividades, setListaAtividades] = useState(null);
     const [sucessoMensagem, setSucessoMensagem] = useState('');
     const [editandoAtividade, setEditandoAtividade] = useState(null);
-    const [erro, setErro] = useState('');
+    const [erroMensagem, setErroMensagem] = useState(''); // Novo estado para mensagens de erro
     const navigate = useNavigate();
     const [validated, setValidated] = useState(false);
     const [nome, setNome] = useState('');
@@ -108,12 +108,32 @@ function CadAtivSust() {
 
     const handleExcluir = async (id) => {
         if (window.confirm('Tem certeza que deseja excluir?')) {
-            await atividadeService.excluir(id);
-            setSucessoMensagem('Atividade excluída com sucesso!');
-            await listarAtividades();
-            setTimeout(() => {
-                setSucessoMensagem('');
-            }, 3000);
+            try {
+                // Tenta excluir a atividade
+                await atividadeService.excluir(id);
+                setSucessoMensagem('Atividade excluída com sucesso!');
+                await listarAtividades();
+
+                // Limpa a mensagem de sucesso após 3 segundos
+                setTimeout(() => {
+                    setSucessoMensagem('');
+                }, 3000);
+            } catch (error) {
+                // Captura o erro e exibe a mensagem de erro no frontend
+                console.error('Erro ao excluir atividade:', error);
+                if (error.response && error.response.data && error.response.data.message) {
+                    // Se houver uma mensagem de erro específica do backend
+                    setErroMensagem(error.response.data.message);
+                } else {
+                    // Mensagem genérica caso o erro não seja específico
+                    setErroMensagem('Esse tipo pois possui Atividade Cadastrada! Não poderá ser excluído');
+                }
+
+                // Limpa a mensagem de erro após 3 segundos
+                setTimeout(() => {
+                    setErroMensagem('');
+                }, 3000);
+            }
         }
     };
 
@@ -125,7 +145,7 @@ function CadAtivSust() {
     const handleCancelar = () => {
         setNome('');
         setEditandoAtividade(null);
-        setErro('');
+        setErroMensagem(''); // Limpa mensagem de erro
         navigate('/AtivSustentaveis');
     };
 
@@ -198,6 +218,9 @@ function CadAtivSust() {
                                 <Col lg={10}>
                                     <Alert className="mt-3 text-center" variant="success" show={sucessoMensagem !== ""}>
                                         <b> <FaCheckCircle /> </b> {sucessoMensagem}
+                                    </Alert>
+                                    <Alert className="mt-3 text-center" variant="danger" show={erroMensagem !== ""}>
+                                        <b> <FaTimes /> </b> {erroMensagem}
                                     </Alert>
                                 </Col>
                             </Form>

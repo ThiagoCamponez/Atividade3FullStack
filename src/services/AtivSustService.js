@@ -1,7 +1,7 @@
 const API_BASE_URL = "http://localhost:3001";
 
 class AtivSustService {
-       async obterTodos() {
+    async obterTodos() {
         const response = await fetch(`${API_BASE_URL}/criarativsust`, {
             headers: {
                 'Content-Type': 'application/json'
@@ -63,29 +63,24 @@ class AtivSustService {
     
 
     async atualizar(idAtividade, atividadeDados) {
+
         try {
             const response = await fetch(`${API_BASE_URL}/criarativsust/${idAtividade}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(atividadeDados) // Certifique-se de que os dados estão corretos
-            });
-        
-            if (!response.ok) {
-                const errorData = await response.json(); // Captura a resposta de erro detalhada
-                console.log('Erro ao atualizar:', errorData);
-                throw new Error(`Erro ao atualizar atividade: ${errorData.message || 'Erro desconhecido.'}`);
-            }
+                body: JSON.stringify(atividadeDados)
+            })
     
-            const dadosAtualizados = await response.json(); // Supondo que o backend retorne os dados atualizados
-            return dadosAtualizados; // Retorne os dados para uso no frontend, se necessário
+            if (!response.ok) {
+                console.log('Erro ao atualizar!')
+                throw new Error('Erro ao atualizar atividade...')
+            }
         } catch (error) {
-            console.error('Erro ao atualizar atividade:', error);
-            throw error; // Lança o erro para que o frontend lide com ele
+            throw error;
         }
     }
-    
 
     async obterPorId(tipo_id) {
         const response = await fetch(`${API_BASE_URL}/criarativsust/${tipo_id}`, {
@@ -102,26 +97,21 @@ class AtivSustService {
         }
     }
 
-    async excluir(criar_id) {
+    async excluir(idAtividade) {
+
         try {
-            const response = await fetch(`${API_BASE_URL}/criarativsust/${criar_id}`, {
-                method: 'DELETE',
-            });
-            
-            if (!response.ok) {
-                const errorData = await response.json(); // Captura os detalhes do erro, se houver
-                console.log('Erro ao excluir:', errorData);
-                throw new Error(`Erro ao excluir atividade: ${errorData.message || 'Erro desconhecido.'}`);
-            }
+            const response = await fetch(`${API_BASE_URL}/criarativsust/${idAtividade}`, {
+                method: 'DELETE'
+            })
     
-            // Sucesso, retorna alguma confirmação se necessário, ou apenas null
-            return { message: 'Atividade excluída com sucesso.' };
+            if (!response.ok) {
+                console.log('Erro ao excluir!')
+                throw new Error('Erro ao excluir atividade...')
+            }
         } catch (error) {
-            console.error('Erro ao excluir atividade:', error);
-            throw error; // Lança o erro para que o frontend lide com ele
+            throw error;
         }
     }
-    
 
     async filtrar(termoBusca) {
         const response = await fetch(`${API_BASE_URL}/criarativsust/filtrar/${termoBusca}`, {

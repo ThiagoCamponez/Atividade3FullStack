@@ -41,6 +41,10 @@ const router = createBrowserRouter([
         element: <ProtectedRoute> <CriarAtivSust /> </ProtectedRoute>, // Rota protegida
       },
       {
+        path: '/CriarAtivSust/:idAtividadeSust',
+        element: <ProtectedRoute> <CriarAtivSust /> </ProtectedRoute>, // Rota protegida
+      },
+      {
         path: '/AtivSustentaveis/:idAtividade',
         element: <ProtectedRoute> <CadAtivSust /> </ProtectedRoute>, // Rota protegida
       },
